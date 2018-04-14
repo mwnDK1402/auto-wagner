@@ -77,20 +77,23 @@ client.on("message", async message => {
           })
           .catch(console.error);
       else {
-        const role = message.guild.roles.find(e => roleName === e.name);
+        const role = message.guild.roles.find(e => roleName === e.name);  // undefined if not found
 
         if (role === undefined) {
           console.log(`Could not find ${roleName} as a Role.`);
           return;
-        } 
+        }
 
-        message.member.removeRoles(roles)
+        const guildRoles = message.guild.roles.filter((r, k, c) => 
+        {
+          return roles.some(n => n === r.name);
+        });
+
+        message.member.removeRoles(guildRoles)
           .then(() => message.member.addRole(role)
             .then(() => message.reply(`I assigned you to the ${role.name} role.`))
             .catch(console.error))
           .catch(console.error);
-
-        
       }
 
       break;
